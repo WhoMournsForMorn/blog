@@ -21,9 +21,19 @@
 
     {% endfor %}
 
-    {% for blogpost in blogposts %}
+    {% for i in 0..11 %}
 
+        {% set count = 0 %}
+        {% set currentDate = "now"|date("Y/m")|date_modify("-{i} month") %}
+        {% for blogpost in blogposts %}
 
+            {% if blogpost.postDate|date("Y/m")  %}
+                {% set currentDate ++ %}
+            {% endif %}
+
+        {% endfor %}
+
+        {% include 'archivelist.html.twig' with {'year': currentDate|date("Y"), 'month': currentDate|date("M"), 'count': count } %}
 
     {% endfor %}
 

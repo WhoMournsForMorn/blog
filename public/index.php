@@ -34,13 +34,13 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->get('/post/{id}', function (Silex\Application $app, $id)  {
     if (!array_key_exists($id, $app['blogposts'])) {
-        $app->abort(404, 'The article could not be found');
+        $app->abort(404, 'The blog post could not be found');
     }
-    $article = $app['blogposts'][$id];
+    $blogpost = $app['blogposts'][$id];
     return $app['twig']->render(
         'blogpost.html.twig',
         array(
-            'article' => $article,
+            'blogpost' => $blogpost,
         )
     );
 })
@@ -50,11 +50,11 @@ $app->get('/post/{id}', function (Silex\Application $app, $id)  {
 $app->get('/archive/{year}/{month}', function (Silex\Application $app, $year, $month) {
     $arr = array();
 
-    foreach ($app['blogposts'] as $article) {
-        $postMonth = $article.postDate->format('m');
-        $postYear = $article.postDate->format('Y');
+    foreach ($app['blogposts'] as $blogpost) {
+        $postMonth = $blogpost.postDate->format('M');
+        $postYear = $blogpost.postDate->format('Y');
         if ($postYear == $year && $postMonth == $month) {
-           array_push($arr, $article);
+           array_push($arr, $blogpost);
         }
     }
     return $app['twig']->render(
