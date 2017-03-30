@@ -1,42 +1,67 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <h1>
-        Test Site
-    </h1>
+<div class="container">
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-8">
+            <h1 class="page-header">
+                Test Site
+            </h1>
 
-    {% for blogpost in blogposts|slice(0,3) %}
-        <article>
-            <h1><a href="{{ app.url_generator.generate('blogpost', {id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a></h1>
-            <p>{{ blogpost.postContent }}</p>
-            <p><small>On {{ blogpost.postDate }} by {{ blogpost.authorName }}</small></p>
-        </article>
-    {% endfor %}
+            {% for blogpost in blogposts|slice(0,3) %}
+                <h2>
+                    <a href="{{ app.url_generator.generate('blogpost', {id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a>
+                </h2>
+                <p class="lead">
+                    by <a href="#">{{ blogpost.authorName }}</a>
+                </p>
+                <p><span class="glyphicon glyphicon-time"></span> Posted on {{ blogpost.postDate }}</p>
+                <p>{{ blogpost.postContent }}</p>
+            {% endfor %}
+        </div>
 
-    <h2>
-        5 recent posts:
-    </h2>
-    {% for blogpost in blogposts|slice(0,5) %}
+        <!-- Blog Sidebar Widgets Column -->
+        <div class="col-md-4">
+            <!-- Blog 5 recent Well -->
+            <div class="well">
+                <h4>5 recent posts:</h4>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled">
+                            {% for blogpost in blogposts|slice(0,5) %}
+                                <li class="list-item"><a href="{{ app.url_generator.generate('blogpost', {id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>           
+            </div>
+            <!-- Blog archive Well -->
+            <div class="well">
+                <h4>Archives</h4>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled">
+                            {% for i in 0..11 %}
 
-        <h3><a href="{{ app.url_generator.generate('blogpost', {id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a></h3>
+                                {% set count = 0 %}
+                                {% set currentDate = "now"|date("Y-m")|date_modify("-#{i} month") %}
+                                {% for blogpost in blogposts %}
 
-    {% endfor %}
+                                    {% if date(blogpost.postDate|date("Y-m")).diff(currentDate).days == 0 %}
+                                        {% set count = count + 1 %}
+                                    {% endif %}
 
-    <h2>Archives</h2>
+                                {% endfor %}
 
-    {% for i in 0..11 %}
+                                {% include 'archivelist.html.twig' with {'year': currentDate|date("Y"), 'month': currentDate|date("F"), 'count': count } %}
 
-        {% set count = 0 %}
-        {% set currentDate = "now"|date("Y-m")|date_modify("-#{i} month") %}
-        {% for blogpost in blogposts %}
-
-            {% if date(blogpost.postDate|date("Y-m")).diff(currentDate).days == 0 %}
-                {% set count = count + 1 %}
-            {% endif %}
-
-        {% endfor %}
-
-        {% include 'archivelist.html.twig' with {'year': currentDate|date("Y"), 'month': currentDate|date("F"), 'count': count } %}
-
-    {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </div>
+</div>
 
 {% endblock %}

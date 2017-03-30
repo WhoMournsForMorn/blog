@@ -1,5 +1,8 @@
-<h1>
+<h1 class="page-header">
     {{ blogpost.postTitle }}
 </h1>
+<p class="lead">
+    by <a href="#">{{ blogpost.authorName }}</a>
+</p>
+<p><span class="glyphicon glyphicon-time"></span> Posted on {{ blogpost.postDate }}</p>
 <p>{{ blogpost.postContent }}</p>
-<p><small>On {{ blogpost.postDate }} by {{ blogpost.authorName }}</small></p>

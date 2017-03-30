@@ -77,6 +77,8 @@ $app->get('/archive/{year}/{month}', function (Silex\Application $app, $year, $m
     return $app['twig']->render(
         'archive.html.twig',
         array(
+            'month' => $month,
+            'year' => $year,
             'blogposts' => $arr,
         )
     );

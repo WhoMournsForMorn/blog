@@ -1,12 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ blogpost.postTitle }}{% endblock %}
 {% block body %}
-{#     <h1>
-        {{ blogpost.postTitle }}
-    </h1>
-    <p>{{ blogpost.postContent }}</p>
-    <p><small>On {{ blogpost.postDate }} by {{ blogpost.authorName }}</small></p> #}
-    {% include 'blogpostpartial.html.twig' %}
-    
-    <p><a href="{{ app.url_generator.generate('index') }}">Back to homepage</a></p>
+	<div class="container">
+		<div class="col-md-14">
+		    {% include 'blogpostpartial.html.twig' %}
+		    
+		    <p><a href="{{ app.url_generator.generate('index') }}">Back to homepage</a></p>
+		</div>
+	</div>
 {% endblock %}
