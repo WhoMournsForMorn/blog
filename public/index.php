@@ -33,10 +33,10 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 $app->get('/post/{id}', function (Silex\Application $app, $id)  {
-    if (!array_key_exists($id, $app['blogposts'])) {
+    if (!array_key_exists($id - 1, $app['blogposts'])) {
         $app->abort(404, 'The blog post could not be found');
     }
-    $blogpost = $app['blogposts'][$id];
+    $blogpost = $app['blogposts'][$id - 1];
     return $app['twig']->render(
         'blogpost.html.twig',
         array(
@@ -47,6 +47,21 @@ $app->get('/post/{id}', function (Silex\Application $app, $id)  {
     ->assert('id', '\d+')
     ->bind('blogpost');
 
+$app->get('/archive/{year}/{month}/post/{id}', function (Silex\Application $app, $year, $month, $id)  {
+    if (!array_key_exists($id - 1, $app['blogposts'])) {
+        $app->abort(404, 'The blog post could not be found');
+    }
+    $blogpost = $app['blogposts'][$id - 1];
+    return $app['twig']->render(
+        'archiveblogpost.html.twig',
+        array(
+            'blogpost' => $blogpost,
+        )
+    );
+})
+    ->assert('id', '\d+')
+    ->bind('archiveblogpost');
+
 $app->get('/archive/{year}/{month}', function (Silex\Application $app, $year, $month) {
     $arr = array();
 
@@ -54,7 +69,7 @@ $app->get('/archive/{year}/{month}', function (Silex\Application $app, $year, $m
 
         $postMonth = date_format(new DateTime($blogpost['postDate']), 'F');
         $postYear = date_format(new DateTime($blogpost['postDate']), 'Y');
-        
+
         if ($postYear == $year && $postMonth == $month) {
            array_push($arr, $blogpost);
         }

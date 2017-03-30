@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ blogpost.postTitle }}{% endblock %}
+{% block body %}
+{#     <h1>
+        {{ blogpost.postTitle }}
+    </h1>
+    <p>{{ blogpost.postContent }}</p>
+    <p><small>On {{ blogpost.postDate }} by {{ blogpost.authorName }}</small></p> #}
+    {% include 'blogpostpartial.html.twig' %}
+    
+    <p><a href="{{ app.url_generator.generate('archive',{year: blogpost.postDate|date("Y"), month: blogpost.postDate|date("F")}) }}">Back to {{blogpost.postDate|date("F")}} archive</a></p>
+{% endblock %}

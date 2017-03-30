@@ -4,7 +4,7 @@
         Test Site
     </h1>
 
-    {% for blogpost in blogposts|slice(0,2) %}
+    {% for blogpost in blogposts|slice(0,3) %}
         <article>
             <h1><a href="{{ app.url_generator.generate('blogpost', {id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a></h1>
             <p>{{ blogpost.postContent }}</p>
@@ -15,7 +15,7 @@
     <h2>
         5 recent posts:
     </h2>
-    {% for blogpost in blogposts|slice(0,4) %}
+    {% for blogpost in blogposts|slice(0,5) %}
 
         <h3><a href="{{ app.url_generator.generate('blogpost', {id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a></h3>
 
