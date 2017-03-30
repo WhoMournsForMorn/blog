@@ -17,7 +17,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     ),
 ));
 
-$app['blogposts'] = $app['db']->fetchAll('SELECT * FROM blog_posts BP INNER JOIN blog_authors BA ON BP.authorID = BA.authorID ORDER BY BP.postDate DESC');
+$app['blogposts'] = $app['db']->fetchAll('SELECT * FROM blog_posts BP INNER JOIN blog_authors BA ON BP.authorID = BA.authorID WHERE BP.postDate > DATE_SUB(now(), INTERVAL 12 MONTH) ORDER BY BP.postDate DESC');
 
 $app->get('/', function (Silex\Application $app)  {
     return $app['twig']->render(
@@ -51,8 +51,10 @@ $app->get('/archive/{year}/{month}', function (Silex\Application $app, $year, $m
     $arr = array();
 
     foreach ($app['blogposts'] as $blogpost) {
-        $postMonth = $blogpost.postDate->format('M');
-        $postYear = $blogpost.postDate->format('Y');
+
+        $postMonth = date_format(new DateTime($blogpost['postDate']), 'F');
+        $postYear = date_format(new DateTime($blogpost['postDate']), 'Y');
+        
         if ($postYear == $year && $postMonth == $month) {
            array_push($arr, $blogpost);
         }
@@ -64,7 +66,7 @@ $app->get('/archive/{year}/{month}', function (Silex\Application $app, $year, $m
         )
     );
 })->assert('year', '\d{4}')
-  ->assert('month', '\d{2}')
+  ->assert('month', '\w{3,9}?')
   ->bind('archive');
 
 
@@ -72,8 +74,5 @@ $app->get('/archive/{year}/{month}', function (Silex\Application $app, $year, $m
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 
-
-
-// This should be the last line
-$app->run(); // Start the application, i.e. handle the request
+$app->run();
 ?>

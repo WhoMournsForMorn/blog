@@ -4,7 +4,7 @@
         Test Site
     </h1>
 
-    {% for blogpost in blogposts %}
+    {% for blogpost in blogposts|slice(0,2) %}
         <article>
             <h1><a href="{{ app.url_generator.generate('blogpost', {id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a></h1>
             <p>{{ blogpost.postContent }}</p>
@@ -21,19 +21,21 @@
 
     {% endfor %}
 
+    <h2>Archives</h2>
+
     {% for i in 0..11 %}
 
         {% set count = 0 %}
-        {% set currentDate = "now"|date("Y/m")|date_modify("-{i} month") %}
+        {% set currentDate = "now"|date("Y-m")|date_modify("-#{i} month") %}
         {% for blogpost in blogposts %}
 
-            {% if blogpost.postDate|date("Y/m")  %}
-                {% set currentDate ++ %}
+            {% if date(blogpost.postDate|date("Y-m")).diff(currentDate).days == 0 %}
+                {% set count = count + 1 %}
             {% endif %}
 
         {% endfor %}
 
-        {% include 'archivelist.html.twig' with {'year': currentDate|date("Y"), 'month': currentDate|date("M"), 'count': count } %}
+        {% include 'archivelist.html.twig' with {'year': currentDate|date("Y"), 'month': currentDate|date("F"), 'count': count } %}
 
     {% endfor %}
 
