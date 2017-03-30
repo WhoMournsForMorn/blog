@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1>
+        Archive
+    </h1>
+
+    {% for article in articles %}
+        <article>
+            <h1><a href="{{ app.url_generator.generate('blogpost', {id: article.postID} ) }}">{{ article.postTitle }}</a></h1>
+            <p>{{ article.postContent }}</p>
+            <p><small>On {{ article.postDate }} by {{ article.authorName }}</small></p>
+        </article>
+    {% endfor %}
+
+{% endblock %}
