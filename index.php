@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 $app = new Silex\Application();
 
@@ -17,6 +17,12 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     ),
 ));
 
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/templates',
+));
+
+$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
+
 $app['blogposts'] = $app['db']->fetchAll('SELECT * FROM blog_posts BP INNER JOIN blog_authors BA ON BP.authorID = BA.authorID WHERE BP.postDate > DATE_SUB(now(), INTERVAL 12 MONTH) ORDER BY BP.postDate DESC');
 
 $app->get('/', function (Silex\Application $app)  {
@@ -28,12 +34,9 @@ $app->get('/', function (Silex\Application $app)  {
     );
 })->bind('index');
 
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/../templates',
-));
-
 $app->get('/post/{id}', function (Silex\Application $app, $id)  {
     $blogpost = '';
+    
     foreach ($app['blogposts'] as $post) {
         if ($post['postID'] == $id) {
             $blogpost = $post;
@@ -96,10 +99,6 @@ $app->get('/archive/{year}/{month}', function (Silex\Application $app, $year, $m
 })->assert('year', '\d{4}')
   ->assert('month', '\w{3,9}?')
   ->bind('archive');
-
-
-
-$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 
 $app->run();

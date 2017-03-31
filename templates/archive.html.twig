@@ -7,16 +7,18 @@
                 <h1 class="page-header">
                 {{month}} {{year}} Archive
                 </h1>
-
-                {% for blogpost in blogposts %}
-                    <h2><a href="{{ app.url_generator.generate('archiveblogpost', {year: blogpost.postDate|date("Y"), month: blogpost.postDate|date("F"), id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a></h2>
-                    <p class="lead">
-                        by <a href="#">{{ blogpost.authorName }}</a>
-                    </p>
-                    <p><span class="glyphicon glyphicon-time"></span> Posted on {{ blogpost.postDate }}</p>
-                    <p>{{ blogpost.postContent }}</p>
-                {% endfor %}
-
+                {% if blogposts is empty %}
+                    <h4>Guess we didn't blog this month...</h4>
+                {% else %}
+                    {% for blogpost in blogposts %}
+                        <h2><a href="{{ app.url_generator.generate('archiveblogpost', {year: blogpost.postDate|date("Y"), month: blogpost.postDate|date("F"), id: blogpost.postID} ) }}">{{ blogpost.postTitle }}</a></h2>
+                        <p class="lead">
+                            by <a href="#">{{ blogpost.authorName }}</a>
+                        </p>
+                        <p><span class="glyphicon glyphicon-time"></span> Posted on {{ blogpost.postDate }}</p>
+                        <p>{{ blogpost.postContent }}</p>
+                    {% endfor %}
+                {% endif %}
                 <p><a href="{{ app.url_generator.generate('index') }}">Back to homepage</a></p>
             </div>
         </div>
